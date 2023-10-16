@@ -809,6 +809,13 @@
                    b% s_donor% xtra12 = (b% s_donor% xtra3 - initial_P_spin)/b% s_donor% dt ! Spin dot= (Pini-Pfin)/dt
                    b% s_donor% xtra4 = abs(b% s_donor% xtra3 - initial_P_spin)/b% s_donor% dt ! Spin dot= (Pini-Pfin)/dt
                    b% s_donor% xtra5 = (initial_B_field - 1.0e8)*exp_cr(-(b% m(2) - b% m_old(2))/(0.025*msun)) + 1.0e8    
+
+                   
+                   write(*,*) 'Accretion phase',  b% s_donor% xtra3,  b% s_donor% xtra4,  b% s_donor% xtra5, b% xfer_fraction    
+                   
+                   write(*,*) '##########################################################################'
+                   write(*,*) b% s_donor% xtra12
+                   write(*,*) '##########################################################################'
              
                else if ((R_M .ge. R_CO) .and. ((R_M .lt. R_LC))) then
                    ! Propeller phase
@@ -826,6 +833,14 @@
                    b% s_donor% xtra4 = abs(b% s_donor% xtra3 - initial_P_spin)/b% s_donor% dt ! Spin dot= (Pini-Pfin)/dt
                    !b% s_donor% xtra5 = (initial_B_field - 1.0e8)*exp_cr(-b% s_donor% dt/(3.0d9*secyer)) + 1.0e8 
                    b% s_donor% xtra5 = (initial_B_field - 1.0e8)*exp_cr(-(b% m(2) - b% m_old(2))/(0.025*msun)) + 1.0e8    
+                   write(*,*) 'Propeller phase', b% s_donor% xtra3,  b% s_donor% xtra4,  b% s_donor% xtra5, b% xfer_fraction
+                   
+                   write(*,*) '##########################################################################'
+                   write(*,*) b% s_donor% xtra12
+                   write(*,*) '##########################################################################'
+                   
+                   !b% m(2) = b% m(2) - (b% xfer_fraction*abs(b% mtransfer_rate)*b% s_donor% dt)
+                   !write(*,*)'Subtracting to compensate', (b% xfer_fraction*abs(b% mtransfer_rate)*b% s_donor% dt)/msun
 
                else
                     write(*,*)' Error???? ', R_CO, R_M, R_LC
@@ -847,6 +862,12 @@
                b% s_donor% xtra12 = (b% s_donor% xtra3 - initial_P_spin)/b% s_donor% dt ! Spin dot= (Pini-Pfin)/dt
                b% s_donor% xtra4 = abs(b% s_donor% xtra3 - initial_P_spin)/b% s_donor% dt ! Spin dot
                b% s_donor% xtra5 = (initial_B_field - 1.0e8)*exp_cr(-b% s_donor% dt/(3.0d9*secyer)) + 1.0e8
+               
+               write(*,*)'Dettached phase', b% s_donor% xtra3,  b% s_donor% xtra4,  b% s_donor% xtra5, &
+               b% xfer_fraction, b% xfer_fraction*abs(b% mtransfer_rate)
+               write(*,*) '##########################################################################'
+               write(*,*) b% s_donor% xtra12
+               write(*,*) '##########################################################################'
 
             end if
          end if
@@ -1316,7 +1337,7 @@
        ! From Tauris et al. 2012, for Pms of 30ms
 	   dm_eq = (0.22_dp * ((b% m(2)/msun) ** (1.0/3.0)) / ((30.0) ** (4.0/3.0)) )
 	   
-       beta = 0.3d0 ! #####CHANGE HERE!!!
+       beta = 0.3d0
        
        if (b% point_mass_i/=0 .and. ((b% rl_relative_gap(1) .ge. 0.d0) &
          .and. (abs(b% mtransfer_rate/(Msun/secyer)) .ge. dm_dubus))) then

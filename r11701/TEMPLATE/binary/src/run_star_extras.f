@@ -187,13 +187,19 @@ contains
          R_LC = b% s_donor% xtra11
 	
 	if ((dm_a .ge. dm_eq) .and. (abs(b% mtransfer_rate/(msun/secyer)) .le. dm_dubus)) then
+	    if (P_spin .le. 0.03d0) then
 		f = s% x_ctrl(2) !0.1
 		s% xtra7 = 4.0 * pi ** 2.0 * Inertia * dot_P_spin / P_spin ** 3.0 ! L_p
 		v_esc = sqrt(2.0 * s% cgrav(1) * b% m(1) / min(b% r(1),b% rl(1)))
 		
 		s% xtra8 = - f * (s% xtra7/ (2.0 * v_esc ** 2.0 )) * &
 		( b% r(1) / b% separation) ** 2.0 ! pulsar_wind_loss
-
+		write(*,*)' MSP phase', P_spin ,'s, ', dot_P_spin , 's/s, ', Inertia, 'g/cm2, ', &
+		s% xtra7, 'erg/s, ', s% xtra8, 'g/s' 
+	    else
+	        s% xtra7 = 0.0
+                s% xtra8 = 0.0
+	    end if
         else
                 s% xtra7 = 0.0
                 s% xtra8 = 0.0
@@ -203,6 +209,7 @@ contains
 	s% explicit_mstar_dot = s% mstar_dot
 	
   end subroutine my_adjust_mdot
+	
 
   subroutine how_many_extra_history_header_items(id, id_extra, num_cols)
       integer, intent(in) :: id, id_extra

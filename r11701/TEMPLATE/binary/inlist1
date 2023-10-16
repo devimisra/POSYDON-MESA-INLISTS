@@ -53,7 +53,7 @@
 &controls
 
       x_ctrl(1) = 1.0d0 !Eddington limit calculated at 150%
-      x_ctrl(2) = 0.1d0
+      x_ctrl(2) = 0.1d0 !Pulsar generated irradiation wind efficiency ! DEVINA NOV2022
       use_other_adjust_mdot = .true. ! DEVINA NOV2022
       !opacity_max = 10.0d0
       
